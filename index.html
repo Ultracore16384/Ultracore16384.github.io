@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Минтимер Ифратович | Gamedev Developer</title>
+    <style>
+        :root {
+            --primary-color: #00d2ff;
+            --dark-bg: #121212;
+            --light-text: #ffffff;
+            --card-bg: #1e1e1e;
+            --accent-hover: #00a8cc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            overflow-x: hidden; /* Чтобы не было горизонтальной прокрутки из-за анимаций */
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- Header & Nav --- */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        .logo { font-weight: bold; font-size: 1.2rem; color: var(--primary-color); text-transform: uppercase; }
+        nav ul { display: flex; gap: 2rem; }
+        nav a:hover { color: var(--primary-color); }
+
+        /* --- Hero Section (Анимация) --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 80px;
+            background: radial-gradient(circle at center, #2a2a2a 0%, #121212 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Классы для анимации главного экрана */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            position: relative;
+        }
+        
+        /* Эффект свечения текста */
+        .hero span { color: var(--primary-color); animation: pulseGlow 2s infinite alternate; }
+        @keyframes pulseGlow {
+            from { text-shadow: 0 0 5px rgba(0, 210, 255, 0.5); }
+            to { text-shadow: 0 0 20px rgba(0, 210, 255, 0.8); }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: #000;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+        }
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 168, 204, 0.5);
+        }
+
+        /* Sections General */
+        section { padding: 5rem 5%; }
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+        h2::after {
+            content: ''; display: block; width: 60px; height: 3px;
+            background-color: var(--primary-color); margin: 10px auto 0;
+        }
+
+        /* About */
+        .about-content {
+            max-width: 800px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+        }
+        @media (max-width: 768px) {
+            .about-content { grid-template-columns: 1fr; text-align: center; }
+            .about-text, .about-img { margin: 0 auto; }
+        }
+        .avatar {
+            width: 200px; height: 200px; border-radius: 50%; object-fit: cover;
+            border: 3px solid var(--primary-color);
+        }
+
+        /* Skills Grid & Animation */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Карточка навыка с анимацией */
+        .skill-card {
+            background: var(--card-bg);
+            padding: 2rem; /* Чуть больше воздуха */
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #333;
+            
+            /* Начальное состояние для анимации */
+            opacity: 0;
+            transform: translateY(20px);
+            
+            /* Сама анимация появления */
+            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        /* Разные задержки для каскадного эффекта */
+        .skill-card:nth-child(1) { animation-delay: 0.3s; }
+        .skill-card:nth-child(2) { animation-delay: 0.6s; }
+        .skill-card:nth-child(3) { animation-delay: 0.9s; }
+        .skill-card:nth-child(4) { animation-delay: 1.2s; }
+        .skill-card:nth-child(5) { animation-delay: 1.5s; }
+        .skill-card:nth-child(6) { animation-delay: 1.8s; }
+        .skill-card:nth-child(7) { animation-delay: 2.1s; }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Эффект при наведении на навык */
+        .skill-card:hover {
+            transform: translateY(-10px); /* Поднимается вверх */
+            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.2); /* Яркая тень */
+            border-color: var(--primary-color);
+        }
+
+        .skill-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card-link {
+            display: block;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            border: 1px solid #333;
+            text-decoration: none;
+        }
+        .project-card-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+        .project-img {
+            width: 100%; height: 200px; object-fit: cover; background-color: #222; display: block;
+        }
+        .project-info { padding: 1.5rem; }
+        .tech-tags {
+            margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 6px;
+        }
+        .tag {
+            font-size: 0.8rem; padding: 4px 8px; background: #333; border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center; /* Центрирование текста */
+            padding: 2rem; background: #0b0b0b; color: #888; border-top: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Навигация -->
+    <header>
+        <div class="logo">portfolio</div>
+        <nav>
+            <ul>
+                <li><a href="#about">Обо мне</a></li>
+                <li><a href="#skills">Навыки</a></li>
+                <li><a href="#projects">Проекты</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Главный экран -->
+    <section class="hero">
+        <h1>Привет, я<br><span>Фахрутдинов Минтимер Ифратович</span></h1>
+        <p>Gamedev разработчик. Создаю игры на Unity, приложения с низкоуровневой графикой, моды для Minecraft.</p>
+        <a href="#contact" class="btn">Связаться со мной</a>
+    </section>
+
+    <!-- Обо мне -->
+    <section id="about">
+        <h2>Обо мне</h2>
+        <div class="about-content">
+            <div class="about-img">
+                <img src="DSC_6138.jpg" alt="Фото разработчика" class="avatar">
+            </div>
+            <div class="about-text">
+                <h3>Кто я?</h3>
+                <p>Я 16-летний инди-разработчик, основной язык - C#. Также работаю с Java, HTML и HLSL. Использую OpenTK для создания игр/приложений с более гибкими графическими возможностями.</p>
+                <br>
+                <p>Имею некоторые знания в том, как работает графика и сам компьютер на низкоуровневой архитектуре.</p>
+                <br>
+                <p>Когда в разработке появляется проблема, которую нельзя (эффективно) разрешить текущими знаниями - быстро изучаю документацию (сейчас стало проще изучать информацию от посредника - ChatGPT или другие модели).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Навыки -->
+    <section id="skills">
+        <h2>Навыки</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3>Unity</h3>
+                <p>Многолетняя(4) работа с движком, HLSL и block-based шейдеры. Работаю с процедурной генерацией чего бы то ни было, что можно инициализировать с параметрами (террейны, текстуры, уровни). Создаю ощущение глубины проекта графическими корутинами.</p>
+            </div>
+            <div class="skill-card">
+                <h3>C#</h3>
+                <p>Написание чистого кода, реализация архитектурных паттернов, использование возможностей языка, внедрение алгоритмов и геометрических теорем для оптимизации.</p>
+            </div>
+            <div class="skill-card">
+                <h3>OpenTK</h3>
+                <p>Работа с графическим конвейером (отправка вертексов и примитивов, загрузка текстур, отправка текстур и цветов, работа с альфа-каналом, двойная буфферизация), создание 2D графических движков для игр и приложений.</p>
+            </div>
+            <div class="skill-card">
+                <h3>Git</h3>
+                <p>Контроль репозитория, работа в команде, скачивание данных программой с GitHub. Git (Desktop через терминал, как терминал в целом), Github Desktop, слияние веток.</p>
+            </div>
+            <div class="skill-card">
+                <h3>Minecraft Modding</h3>
+                <p>Создание клиентских и серверных модов в среде Eclipse. Добавление блоков и материалов, изменение генерации, добавление команд с локальной сохраняемой через NBT (или свои методы) БД, работа с сущностями, добавление механизмов.</p>
+            </div>
+            <div class="skill-card">
+                <h3>Creating Minecraft Servers</h3>
+                <p>Сборка и настройка ядра (Использовал оригинальное ядро, Forge, Spigot), настройка брендмауэра и роутера (если требуется), работа с конфигами модов и плагинов.</p>
+            </div>
+            <div class="skill-card">
+                <h3>Web</h3>
+                <p>Создание простых сайтов (на август 2026 не знаком с php и JavaScript, начал изучать html). Полный путь от создания фронтенда и архитектуры, до регистрации домена, ssl сертификата, поддоменов, настройки локальной сети.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Проекты -->
+    <section id="projects">
+        <h2>Мои проекты</h2>
+        <div class="projects-grid">
+            
+            <!-- Проект 1: Карточка теперь ссылка -->
+            <a href="project-mouth.html" class="project-card-link">
+                <img src="Mouth.png" alt="Скриншот Mouth" class="project-img">
+                <div class="project-info">
+                    <h3>Mouth</h3>
+                    <p>Огромный и сложный инди 2D симулятор развития микроорганизма в первичном бульоне.</p>
+                    <div class="tech-tags">
+                        <span class="tag">Unity</span>
+                        <span class="tag">C#</span>
+                        <span class="tag">HLSL</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Проект 2 -->
+            <a href="project-dungeon.html" class="project-card-link">
+                <img src="Dungeon.png" alt="Скриншот Dungeon" class="project-img">
+                <div class="project-info">
+                    <h3>DawnOfTheDungeonLords</h3>
+                    <p>Сделанная за 2 дня чернобелая 2D пошаговая стратегия для геймджема B1T Jam 2.</p>
+                    <div class="tech-tags">
+                        <span class="tag">Unity</span>
+                        <span class="tag">C#</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Проект 3 -->
+            <a href="project-elemental.html" class="project-card-link">
+                <img src="ElementalForce.png" alt="Скриншот Elemental" class="project-img">
+                <div class="project-info">
+                    <h3>Elemental Force</h3>
+                    <p>Масштабный инди 2D платформер-RPG, в разработке которого я принимал участие (сейчас в бете).</p>
+                    <div class="tech-tags">
+                        <span class="tag">Unity</span>
+                        <span class="tag">C#</span>
+                        <span class="tag">HLSL</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Проект 4 -->
+            <a href="project-storm.html" class="project-card-link">
+                <img src="Storm.png" alt="Скриншот Storm" class="project-img">
+                <div class="project-info">
+                    <h3>Storm</h3>
+                    <p>Моя пародия на Terraria без физики, для игры с нуля написан графический движок.</p>
+                    <div class="tech-tags">
+                        <span class="tag">OpenTK</span>
+                        <span class="tag">C#</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Проект 5 -->
+            <a href="project-launcher.html" class="project-card-link">
+                <img src="Launcher.png" alt="Скриншот Launcher" class="project-img">
+                <div class="project-info">
+                    <h3>Tech&MagicClassic Launcher</h3>
+                    <p>Forge Minecraft лаунчер, созданный для запуска сборки модов и входа на сервер проекта.</p>
+                    <div class="tech-tags">
+                        <span class="tag">OpenTK</span>
+                        <span class="tag">C#</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Проект 6 -->
+            <a href="project-authforge.html" class="project-card-link">
+                <img src="authforge_icon_1.1_160.png" alt="Скриншот Launcher" class="project-img">
+                <div class="project-info">
+                    <h3>Auth Forge</h3>
+                    <p>1.12.2 Forge Server-Side Minecraft мод-форк плагина Auth, т.к. рабочих альтернатив для своего сервера я не нашел.</p>
+                    <div class="tech-tags">
+                        <span class="tag">Forge</span>
+                        <span class="tag">Java</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <section id="contact">
+        <h2>Связаться со мной</h2>
+        <div class="about-text" style="text-align: center;">
+            <h3 style="margin-bottom: 30px;">Почта - mintimer.adigamov@gmail.com</h3>
+            <a href="https://kwork.ru/user/mintimeradigamov" class="btn">Я на Kwork</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Самозанятый Фахрутдинов Минтимер Ифратович. Все права защищены.</p>
+    </footer>
+
+</body>
+</html>

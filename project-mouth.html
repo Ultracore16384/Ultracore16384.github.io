@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouth | Минтимер Ифратович</title>
+    
+    <style>
+        :root {
+            --primary-color: #00d2ff;
+            --dark-bg: #0f0f0f;       /* Чуть темнее база */
+            --light-text: #ffffff;
+            --card-bg: #1e1e1e;
+            --accent-hover: #00a8cc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.7;
+            /* ГЛАВНОЕ ИСПРАВЛЕНИЕ: отступ сверху для фиксированной шапки */
+            padding-top: 100px; 
+            min-height: 100vh;
+        }
+
+        /* --- Фоновое освещение (Атмосфера) --- */
+        .bg-glow-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            mix-blend-mode: screen;
+        }
+        .blob-1 { top: -20%; left: -10%; width: 600px; height: 600px; background: #004466; }
+        .blob-2 { bottom: -20%; right: -10%; width: 500px; height: 500px; background: #4a00e0; }
+        .blob-3 { top: 30%; right: 10%; width: 400px; height: 400px; background: rgba(0, 210, 255, 0.6); }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- Header & Nav --- */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        .logo { font-weight: bold; font-size: 1.2rem; color: var(--primary-color); text-transform: uppercase; }
+        nav ul { display: flex; gap: 2rem; }
+        nav a:hover { color: var(--primary-color); }
+
+        /* --- Layout Grid --- */
+        .project-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;       /* Убрали margin-top, он теперь в body */
+            padding: 0 20px;     /* Только боковые отступы */
+        }
+
+        @media (max-width: 900px) {
+            .project-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                /* На мобильных тоже не нужен margin-top */
+                padding: 20px; 
+            }
+            .description-block { order: 1; } 
+            .media-block { order: 2; }
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            color: #eee;
+        }
+        h2::after {
+            content: ''; display: block; width: 60px; height: 3px;
+            background-color: var(--primary-color); margin: 10px auto 0;
+        }
+
+        /* --- Description Block --- */
+        .description-block h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        .description-block h1 span { color: var(--primary-color); }
+        
+        .highlight { color: var(--primary-color); font-weight: 600; }
+
+        .desc-text {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+            max-width: 550px;
+        }
+
+        .tech-tags {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+        .tag {
+            padding: 6px 12px;
+            background: #2a2a2a;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #444;
+        }
+        .tag.primary { background: rgba(0, 210, 255, 0.1); border-color: var(--primary-color); color: var(--primary-color); }
+
+        /* --- Media Block (Screenshot) --- */
+        .media-block {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .screenshot-wrapper {
+            opacity: 0;
+            transform: translateY(40px) rotate(-3deg);
+            animation: slideUpFade 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            display: block;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .screenshot-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            border: 1px solid #333;
+            filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.3));
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.15);
+        }
+
+        .screenshot-wrapper:hover {
+            transform: translateY(-15px) rotate(0deg);
+            box-shadow: 0 25px 60px rgba(0, 210, 255, 0.5);
+        }
+        
+        .screenshot-wrapper:hover .screenshot-img {
+            filter: drop-shadow(0 0 50px rgba(0, 210, 255, 0.8));
+            border-color: var(--primary-color);
+        }
+
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0) rotate(0); }
+        }
+
+        /* --- Actions Section --- */
+        .actions-section {
+            max-width: 600px;
+            margin: 4rem auto;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background-color: var(--primary-color);
+            color: #000;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+            margin: 0 10px;
+        }
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 168, 204, 0.5);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        .btn-secondary:hover {
+            background-color: rgba(0, 210, 255, 0.1);
+            border-color: var(--accent-hover);
+        }
+
+        /* --- Return Button --- */
+        .return-btn {
+            position: fixed;
+            bottom: 20px; right: 20px;
+            width: 50px; height: 50px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: 1px solid #333;
+            transition: transform 0.2s, background 0.2s;
+            z-index: 900;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .return-btn:hover { 
+            transform: scale(1.1); 
+            background: #2a2a2a;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #0b0b0b;
+            color: #888;
+            border-top: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновое освещение -->
+    <div class="bg-glow-layer">
+        <div class="glow-blob blob-1"></div>
+        <div class="glow-blob blob-2"></div>
+        <div class="glow-blob blob-3"></div>
+    </div>
+
+    <!-- Навигация -->
+    <header>
+        <div class="logo">portfolio</div>
+        <nav>
+            <ul>
+                <li><a href="index.html#about">Обо мне</a></li>
+                <li><a href="index.html#skills">Навыки</a></li>
+                <li><a href="index.html#projects">Проекты</a></li>
+                <li><a href="index.html#contact">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Заголовок страницы -->
+        <section style="padding: 0 20px;">
+            <h2>Главный Проект: Mouth</h2>
+        </section>
+
+        <!-- Основная сетка: Описание + Скриншот -->
+        <div class="project-container">
+            
+            <!-- Блок описания (Слева) -->
+            <div class="description-block">
+                <h1>Mouth<br><span class="highlight">Выживание в первичном бульоне</span></h1>
+                
+                <p class="desc-text">
+                    Огромный и сложный инди 2D симулятор развития микроорганизма в первичном бульоне. 
+                    Проект разрабатывался с упором на <span class="highlight">процедурную генерацию</span>.
+                </p>
+
+                <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">О проекте</h3>
+                <p class="desc-text" style="margin-bottom: 1.5rem;">
+                    В этой игре вы управляете чем-то вроде клетки или рыбы, выживая в двумерном океане, борясь со средой и другими созданиями. Ключевой идеей является создание своего билда для клетки, снаряжая ее конечностями и меняя другие параметры.
+                </p>
+                <p class="desc-text" style="margin-bottom: 1.5rem;">
+                    Каждая клетка здесь - совокупность массива частей клетки, массива толщин костей и цвета "кожи?". В реальном времени для каждой клетки просчитывается новая текстура ее тела, учитывая разрешение текстуры, кости, анимацию (смещение костей), пятна, цвет и функцию перехода высот.
+                </p>
+                <p class="desc-text" style="margin-bottom: 1.5rem;">
+                    Части клетки - отдельные дочерние объекты со своей уникальной механикой и конфигом добавляемых к клетке характеристик (которые та после отдельно группирует и инициализирует в CreationMain). Части клетки можно установить на клетку в ее сцене-редакторе.
+                </p>
+                <p class="desc-text" style="margin-bottom: 1.5rem;">
+                    Для неигровых клеток на уровне создан ИИ их поведения, который учитывает ее вид (id), рацион питания и находящиеся рядом объекты. Клетки ищут еду, сражаются друг с другом, избегают ваншотающих клеток-гигантов и меняют курс при движении в препятствие через систему приоритетов.
+                </p>
+                <p class="desc-text" style="margin-bottom: 1.5rem;">
+                    Для проекта написан интерфейс для работы с системой сохранений одного из ассетов (это единственный ассет на код в проекте).
+                </p>
+                <p class="desc-text" style="margin-bottom: 1.5rem;">
+                    Для проекта создан ряд шейдеров (размытие в воде, космос, потоки и разводы в воде) на HLSL или визуальных блоках (больше нигде ими не пользуюсь), в целом здесь и начал их создавать.
+                </p>
+                <p class="desc-text" style="margin-bottom: 1.5rem;">
+                    ВСЯ графика для проекта создана мной, нет ни одного импортированного ассета. ВЕСЬ код для проекта написан с нуля мной, генеративный ИИ не использовался (что имеет также свои минусы). В целом генеративный ИИ для кода я использую не так часто, core системы пишутся с нуля.
+                </p>
+                <p class="desc-text" style="margin-bottom: 1.5rem;">
+                    Это творение является невероятным долгостроем из-за проседания личного интереса к проекту в связи с масштабом работы в одиночку (инди разработчики меня поймут). Первые упоминания и core механики можно найти в 2023. Оно развивается время от времени до сих пор, неумолимо двигаясь к релизу в Steam :).
+                </p>
+
+                <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">Ключевые особенности</h3>
+                <ul style="list-style: square; color: #aaa; margin-bottom: 2rem;">
+                    <li style="margin-bottom: 0.5rem;">Сложная в реализации система тела клетки.</li>
+                    <li style="margin-bottom: 0.5rem;">По мере прохождения меняется окружение, встречаются новые противники.</li>
+                    <li>Есть встроенный прямо в игру редактор разработчика (LeftShift + X + W в меню), в котором игроки могут создавать своих клеток-противников на уровнях.</li>
+                </ul>
+
+                <h3 style="font-size: 1.8rem; margin-bottom: 1rem; color: #fff;">Технологии</h3>
+                <div class="tech-tags">
+                    <span class="tag primary">Unity</span>
+                    <span class="tag">C#</span>
+                    <span class="tag">HLSL</span>
+                    <span class="tag">Node-Based Shaders</span>
+                    <span class="tag">Procedural Generated Textures</span>
+                    <span class="tag">Procedural Generated World</span>
+                    <span class="tag">Body System</span>
+                    <span class="tag">Unit AI</span>
+                </div>
+            </div>
+
+            <div class="media-block">
+                <div class="screenshot-wrapper">
+                    <img src="Mouth.png" alt="Геймплей Mouth" class="screenshot-img">
+                </div>
+            </div>
+        </div>
+
+        <section class="actions-section">
+            <h3 style="color: #ccc; margin-bottom: 1.5rem;">Скачать или узнать больше</h3>
+               <p style="margin-bottom: 30px;"> Последняя версия с 3 уровнями прокачки и ребалансом, новой системой сохранения клеток, увеличенным числом конечностей, улучшенным визуалом и другим есть только у меня лично, я не буду выкладывать ее на Game Jolt, т.к. готовлю проект к релизу в Steam с копией по 70-100 рублей. </p>            
+
+            <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                <a href="https://gamejolt.com/games/mouth_game/977564" target="_blank" class="btn btn-secondary">
+                    Страница СТАРОЙ ВЕРСИИ на Game Jolt
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <a href="index.html" class="return-btn" title="Вернуться на главную">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 18l-5-5-5 5-1.41-1.41L11 9l-7.59-7.59L5 0l9 9 9-9 1.41 1.41L17 9l5 5z"/></svg>
+    </a>
+
+    <footer>
+        <p>&copy; 2026 Самозанятый Фахрутдинов Минтимер Ифратович. Все права защищены.</p>
+    </footer>
